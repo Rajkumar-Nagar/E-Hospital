@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { setup_database } from "@/lib/setup_database";
-import Image from "next/image";
 
 export default async function Home() {
 await setup_database()
