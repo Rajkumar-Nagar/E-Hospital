@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { setup_database } from "@/lib/setup_database";
-
+export const dynamic='force-dynamic'
 export default async function Home() {
 await setup_database()
   await prisma.$executeRaw`INSERT INTO users ( email) VALUES 
