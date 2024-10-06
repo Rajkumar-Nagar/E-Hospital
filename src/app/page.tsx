@@ -1,23 +1,21 @@
-import prisma from "@/lib/prisma";
-import { setup_database } from "@/lib/setup_database";
-export const dynamic='force-dynamic'
-export default async function Home() {
-await setup_database()
-  await prisma.$executeRaw`INSERT INTO users ( email) VALUES 
-( 'saflsdfj@example.com'),
-( "e2")`
+'use client';
 
-  const user = await prisma.$queryRaw`SELECT * from users`
-  console.log(user)
+import Navbar from '../components/navbar';
+import Hero from '../components/Hero';
+import Doctors from '../components/Doctors';
+import Testimonials from '../components/Testimonials';
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer';
 
+export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-
-      <pre>
-        {
-          JSON.stringify(user,null,2)
-        }
-      </pre>
-    </div>
+    <>
+      <Navbar />
+      <Hero />
+      <Doctors />
+      <Testimonials />
+      <FAQ />
+      <Footer />
+    </>
   );
 }
