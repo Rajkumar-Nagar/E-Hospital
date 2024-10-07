@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     throw new Error('Phone number and password are required');
                 }
 
-                const user = await prisma.user.findUnique({
+                const user = await prisma.users.findUnique({
                     where: { phoneNumber },
                 });
 
@@ -34,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                 const { password: abc, ...rest } = user
 
-                return rest;
+                return rest as any;
             }
         }),
     ],

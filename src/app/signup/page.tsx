@@ -1,68 +1,77 @@
 'use client';
 
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { authActions } from '@/actions';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+const signupSchema = z.object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.union([
+        z.string().email({ message: "Invalid email address" }),
+        z.string().min(0).max(0), // Allow an empty string
+    ]),
+    password: z.string().min(1, { message: "Password is required" }),
+    confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
+    age: z
+        .string()
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, { message: "Age must be a valid number" }),
+    gender: z.string().min(1, { message: "Gender is required" }),
+    phoneNumber: z
+        .string()
+        .min(10, { message: "Mobile number must be 10 digits" })
+        .max(10, { message: "Mobile number must be 10 digits" }),
+    address: z.string().min(1, { message: "Address is required" }),
+}).refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: "Passwords don't match",
+});
 
 export default function SignupPage() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        age: '',
-        gender: '',
-        mobile: '',
-        address: ''
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: zodResolver(signupSchema),
+        defaultValues: {
+            name: 'asdf',
+            email: '',
+            password: '123',
+            confirmPassword: '123',
+            age: '12',
+            phoneNumber: '1234567890',
+            address: '123',
+            gender: 'Male',
+        }
     });
 
-    const [errors, setErrors] = useState({});
+    const router = useRouter();
+    const [error, setError] = useState('')
 
-    const validate = () => {
-        let tempErrors = {};
-        if (!formData.name) tempErrors.name = "Name is required";
-        if (!formData.password) tempErrors.password = "Password is required";
-        if (!formData.confirmPassword) tempErrors.confirmPassword = "Confirm password is required";
-        if (formData.password !== formData.confirmPassword) tempErrors.passwordMatch = "Passwords don't match";
-        if (!formData.age) tempErrors.age = "Age is required";
-        if (!formData.gender) tempErrors.gender = "Gender is required";
-        if (!formData.mobile) tempErrors.mobile = "Mobile number is required";
-        if (formData.mobile.length !== 10) tempErrors.mobile = "Mobile number must be 10 digits";
-        if (!formData.address) tempErrors.address = "Address is required";
-        setErrors(tempErrors);
+    const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+        const { error, user } = await authActions.createUser(data);
+        if (error) setError(error);
+        else {
+            router.push('/');
+        };
 
-        return Object.keys(tempErrors).length === 0;
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validate()) {
-            console.log(formData);
-            alert('Signup Successful!');
-        }
     };
 
     return (
         <div className="container mx-auto px-4 py-12">
             <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
                 <h1 className="text-4xl font-bold text-blue-600 text-center mb-8">Signup</h1>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     {/* Name */}
                     <div className="mb-5">
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Name</label>
                         <input
                             type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
+                            {...register('name')}
                             placeholder="Enter your name"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                         />
-                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                     </div>
 
                     {/* Email (optional) */}
@@ -70,12 +79,12 @@ export default function SignupPage() {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Email (Optional)</label>
                         <input
                             type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
+                            {...register('email')}
                             placeholder="Enter your email"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                            autoComplete='email'
                         />
+                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                     </div>
 
                     {/* Password */}
@@ -83,13 +92,12 @@ export default function SignupPage() {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Password</label>
                         <input
                             type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
+                            {...register('password')}
                             placeholder="Enter your password"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                            autoComplete='new-password'
                         />
-                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                     </div>
 
                     {/* Confirm Password */}
@@ -97,14 +105,12 @@ export default function SignupPage() {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Confirm Password</label>
                         <input
                             type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
+                            {...register('confirmPassword')}
                             placeholder="Confirm your password"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+                            autoComplete='new-password'
                         />
-                        {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
-                        {errors.passwordMatch && <p className="text-red-500 text-sm mt-1">{errors.passwordMatch}</p>}
+                        {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
                     </div>
 
                     {/* Age */}
@@ -112,22 +118,18 @@ export default function SignupPage() {
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Age</label>
                         <input
                             type="number"
-                            name="age"
-                            value={formData.age}
-                            onChange={handleInputChange}
+                            {...register('age')}
                             placeholder="Enter your age"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                         />
-                        {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
+                        {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age.message}</p>}
                     </div>
 
                     {/* Gender */}
                     <div className="mb-5">
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Gender</label>
                         <select
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleInputChange}
+                            {...register('gender')}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                         >
                             <option value="">Select Gender</option>
@@ -135,35 +137,35 @@ export default function SignupPage() {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
-                        {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                        {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender.message}</p>}
                     </div>
 
-                    {/* Mobile Number */}
+                    {/* phoneNumber Number */}
                     <div className="mb-5">
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Mobile Number</label>
                         <input
                             type="tel"
-                            name="mobile"
-                            value={formData.mobile}
-                            onChange={handleInputChange}
+                            {...register('phoneNumber')}
                             placeholder="Enter your mobile number"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                         />
-                        {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+                        {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>}
                     </div>
 
                     {/* Address */}
                     <div className="mb-5">
                         <label className="block text-lg font-semibold text-gray-700 mb-2">Address</label>
                         <textarea
-                            name="address"
-                            value={formData.address}
-                            onChange={handleInputChange}
+                            {...register('address')}
                             placeholder="Enter your address"
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                         ></textarea>
-                        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
                     </div>
+
+
+                    {/* Error Message */}
+                    {error && <div className="mb-5"> <p className="text-red-500 text-sm mt-1">{error}</p> </div>}
 
                     {/* Submit Button */}
                     <div className="text-center">
