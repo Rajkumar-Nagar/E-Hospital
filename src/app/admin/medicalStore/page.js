@@ -3,9 +3,10 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 const initialMedicinesData = [
-    { id: 1, name: 'Paracetamol', price: 50, disease: 'Fever', expiryDate: '2025-01-01', listedDate: '2024-09-01' },
-    { id: 2, name: 'Amoxicillin', price: 200, disease: 'Infection', expiryDate: '2024-11-01', listedDate: '2024-08-15' },
-    { id: 3, name: 'Ibuprofen', price: 150, disease: 'Pain Relief', expiryDate: '2025-03-15', listedDate: '2024-09-20' },
+    { id: 1, name: 'Paracetamol', price: 50, disease: 'Fever', expiryDate: '2025-01-01', listedDate: '2024-09-01', image: '/med1.jpeg' },
+    { id: 2, name: 'Amoxicillin', price: 200, disease: 'Infection', expiryDate: '2024-11-01', listedDate: '2024-08-15', image: '/med1.jpeg' },
+    { id: 3, name: 'Ibuprofen', price: 150, disease: 'Pain Relief', expiryDate: '2025-03-15', listedDate: '2024-09-20', image: '/med1.jpeg' },
+    // Add more medicines with their image paths...
 ];
 
 export default function MedicalStorePage() {
@@ -81,19 +82,20 @@ export default function MedicalStorePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredMedicines.map((medicine) => (
                     <div key={medicine.id} className="bg-white p-4 rounded-lg shadow-lg">
+                        <img
+                            src={medicine.image}
+                            alt={medicine.name}
+                            className="w-full h-32 object-cover rounded-lg mb-4"
+                        />
                         <h3 className="text-2xl font-bold mb-2">
-
-                            <Link href={`/medicine/${medicine.id}`} className="text-blue-500 hover:underline">{medicine.name}</Link>
-
+                            <Link href={`/admin/medicalStore/${medicine.id}`} className="text-blue-500 hover:underline">{medicine.name}</Link>
                         </h3>
                         <p><strong>Price:</strong> ₹{medicine.price}</p>
                         <p><strong>Disease:</strong> {medicine.disease}</p>
                         <p><strong>Expiry Date:</strong> {medicine.expiryDate}</p>
                         <p><strong>Listed Date:</strong> {medicine.listedDate}</p>
                         <div className="mt-4">
-
                             <Link href={`/medicine/edit/${medicine.id}`} className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</Link>
-
                             <button
                                 onClick={() => handleDelete(medicine.id)}
                                 className="bg-red-500 text-white px-3 py-1 rounded"
@@ -107,7 +109,7 @@ export default function MedicalStorePage() {
 
             {/* Add New Medicine Button */}
             <div className="text-center mt-8">
-                <Link href="/add-medicine">
+                <Link href="/admin/medicalStore/addmedicine">
                     <p className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
                         Add New Medicine
                     </p>
