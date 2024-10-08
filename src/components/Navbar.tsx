@@ -7,8 +7,8 @@ export default function Navbar() {
     const [search, setSearch] = useState('');
 
     return (
-        <nav className="bg-white shadow-md">
-            <div className="container mx-auto flex justify-between items-center py-4">
+        <nav className="bg-white shadow-md px-4 sm:px-6 md:px-8">
+            <div className="mx-auto flex justify-between items-center py-4">
                 <Link href="/">
                     <div className="flex items-center space-x-3">
                         {/* <img src="/images/logo.png" alt="Kalyaan Hospital" className="h-10" /> */}

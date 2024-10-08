@@ -30,7 +30,7 @@ function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div className="p-6 bg-gray-100 rounded-lg shadow-md">
             <h3 className="text-xl font-bold mb-4">Step 1: Go to the Counter Window</h3>
-            <p>Visit the <Link href="/counter"><Link href={"/"} className="text-blue-500 hover:underline">Counter</Link></Link> or click the button below to access the digital booking window.</p>
+            <p>Visit the <Link href="/counter" className="text-blue-500 hover:underline">Counter</Link> or click the button below to access the digital booking window.</p>
           </div>
           <div className="p-6 bg-gray-100 rounded-lg shadow-md">
             <h3 className="text-xl font-bold mb-4">Step 2: Provide Your Details</h3>
@@ -56,9 +56,7 @@ function AboutPage() {
           </div>
         </div>
         <div className="text-center mt-10">
-          <Link href="/counter">
-            <Link href={"/"} className="bg-blue-500 text-white py-3 px-8 rounded-md hover:bg-blue-600 transition">Go to Counter</Link>
-          </Link>
+          <Link href="/counter" className="bg-blue-500 text-white py-3 px-8 rounded-md hover:bg-blue-600 transition">Go to Counter</Link>
         </div>
       </section>
 
