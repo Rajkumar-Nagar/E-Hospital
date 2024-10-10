@@ -29,7 +29,7 @@ export default function Testimonials() {
       <h2 className="text-center text-3xl font-bold text-gray-700 mb-10">What Our Patients Say</h2>
       <div className="container mx-auto text-center">
         <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-lg mx-auto">
-          <p className="text-xl font-light text-gray-600 italic">"{testimonials[current].review}"</p>
+          <p className="text-xl font-light text-gray-600 italic">{testimonials[current].review}</p>
           <h4 className="text-gray-800 mt-4">- {testimonials[current].name}</h4>
         </div>
         <div className="mt-6 space-x-4">

@@ -35,8 +35,8 @@ export const createUser = async (data: User) => {
         }
 
         const [user]: User[] = await prisma.$queryRaw`
-        INSERT INTO users (id, name, email, password, age, phoneNumber, gender, address)
-        VALUES ( ${hexID}, ${name}, ${email}, ${hashedPassword}, ${age}, ${phoneNumber}, ${gender}, ${address})
+        INSERT INTO users ( name, email, password, dob, phoneNumber, gender, address)
+        VALUES ( ${name}, ${email}, ${hashedPassword}, ${new Date()}, ${phoneNumber}, ${gender}, ${address})
         RETURNING * 
         `;
 

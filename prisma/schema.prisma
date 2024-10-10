@@ -3,24 +3,104 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model appointments {
+  id               Int       @id @default(autoincrement())
+  name             String?   @db.VarChar(255)
+  address          String?
+  aadhar_no        String?   @db.VarChar(12)
+  father_name      String?   @db.VarChar(255)
+  mobile_no        String?   @db.VarChar(15)
+  disease          String?   @db.VarChar(255)
+  doctor_name      String?   @db.VarChar(255)
+  age              Int?
+  appointment_date DateTime? @db.Date
+  time_slot        String?   @db.VarChar(50)
+  gender           String?   @db.VarChar(10)
+  appointment_type String?   @db.VarChar(50)
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model attendance {
+  id         Int       @id @default(autoincrement())
+  doctorid   Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model doctors {
-  id    Int    @id
-  name  String
-  email String
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(220)
+  email String @db.VarChar(220)
+}
+
+model experience {
+  id               Int       @id @default(autoincrement())
+  doctorid         Int
+  jobtitle         String?   @db.VarChar(255)
+  startdate        DateTime? @db.Date
+  enddate          DateTime? @db.Date
+  hospital         String?   @db.VarChar(255)
+  offerletter      String?
+  experienceletter String?
+  other            String?
+  created_at       DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model feedback {
+  id         Int       @id @default(autoincrement())
+  userid     Int
+  doctorid   Int
+  medicineid Int?
+  feedback   String?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model medicine {
+  id           Int       @id @default(autoincrement())
+  name         String?   @db.VarChar(255)
+  expiry       DateTime? @db.Date
+  manufactured DateTime? @db.Date
+  image        String?
+  disease      Json?
+  description  String?
+  price        Decimal?  @db.Decimal(10, 2)
+  discount     Decimal?  @db.Decimal(5, 2)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model qualification {
+  id           Int       @id @default(autoincrement())
+  doctorid     Int
+  degree       String?   @db.VarChar(255)
+  college      String?   @db.VarChar(255)
+  passing_year Int?
+  percentage   Decimal?  @db.Decimal(5, 2)
+  documents    Json?
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model storehistory {
+  id         Int       @id @default(autoincrement())
+  medicineid Int
+  userid     Int
+  created_at DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model users {
-  id          String    @id
-  name        String
-  email       String?
-  password    String
-  age         Int
-  phoneNumber String    @unique(map: "sqlite_autoindex_users_2")
-  address     String
-  gender      String
-  createdAt   DateTime? @default(now())
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  phoneNumber String    @unique @db.VarChar(15) @map("phonenumber")
+  address     String?
+  gender      String?   @db.VarChar(10)
+  email       String?   @db.VarChar(255)
+  password    String   @db.VarChar(255)
+  dob         DateTime? @db.Date
+  role        String?   @db.VarChar(50)
+  image       String?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  updated_at  DateTime? @db.Timestamp(6)
 }
