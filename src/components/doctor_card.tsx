@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
 
-function DoctorCard({ doctor }) {
+function DoctorCard({ doctor }: { doctor: any }) {
     return (
         <div className="border border-gray-200 p-6 rounded-lg shadow-lg bg-white transition hover:shadow-xl hover:scale-105 transform duration-300 ease-in-out">
             <img src={doctor.image} alt={doctor.name} className="h-48 w-full object-contain rounded-md mb-4" />

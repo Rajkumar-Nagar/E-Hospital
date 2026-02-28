@@ -1,49 +1,54 @@
 import prisma from "./prisma"
 
-const dropTable = async (table: string) => {
-  return prisma.$queryRaw`DROP TABLE IF EXISTS ${table}`
-}
-
 export async function setup_database() {
+  return
   try {
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Feedback`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Qualification`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Experience`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Appointments`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Attendance`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS StoreHistory`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Doctors`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Medicine`;
+    // await prisma.$executeRaw`DROP TABLE IF EXISTS Users`;
+
+    // return
+
     const Users = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Users (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
-            phoneNumber VARCHAR(15) UNIQUE NOT NULL,
+            phone_number VARCHAR(15) UNIQUE NOT NULL,
             address TEXT NOT NULL,
             gender VARCHAR(10) NOT NULL,
             email VARCHAR(255),
             password VARCHAR(255) NOT NULL,
             dob DATE NOT NULL,
-            role VARCHAR(50) NOT NULL,
+            role VARCHAR(50) NOT NULL DEFAULT 'user',
             image TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP
           );
         `;
-    
+
     const Doctors = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Doctors (
             id SERIAL PRIMARY KEY,
-            userId INT NOT NULL,
-            jobTitle VARCHAR(255) NOT NULL,
-            qualifications JSONB,
-            experience JSONB,
-            appointments JSONB,
-            attendance JSONB,
+            user_id INT NOT NULL,
+            job_title VARCHAR(255) NOT NULL,
             position VARCHAR(255) NOT NULL,
             status VARCHAR(50) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
-            CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES Users(id)
+            CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(id)
           );
         `;
 
     const Qualification = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Qualification (
             id SERIAL PRIMARY KEY,
-            doctorId INT NOT NULL,
+            doctor_id INT NOT NULL,
             degree VARCHAR(255),
             college VARCHAR(255),
             passing_year INT,
@@ -51,24 +56,24 @@ export async function setup_database() {
             documents JSONB,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
-            CONSTRAINT fk_doctor FOREIGN KEY (doctorId) REFERENCES Doctors(id)
+            CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES Doctors(id) ON DELETE CASCADE
           );
         `;
 
     const Experience = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Experience (
             id SERIAL PRIMARY KEY,
-            doctorId INT NOT NULL,
-            jobTitle VARCHAR(255),
-            startDate DATE,
-            endDate DATE,
+            doctor_id INT NOT NULL,
+            job_title VARCHAR(255),
+            start_date DATE,
+            end_date DATE,
             hospital VARCHAR(255),
-            offerLetter TEXT,
-            experienceLetter TEXT,
+            offer_letter TEXT,
+            experience_letter TEXT,
             other TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
-            CONSTRAINT fk_doctor FOREIGN KEY (doctorId) REFERENCES Doctors(id)
+            CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES Doctors(id) ON DELETE CASCADE
           );
         `;
 
@@ -92,12 +97,13 @@ export async function setup_database() {
           );
         `;
 
+
     const Attendance = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Attendance (
             id SERIAL PRIMARY KEY,
-            doctorId INT NOT NULL,
+            doctor_id INT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT fk_doctor FOREIGN KEY (doctorId) REFERENCES Doctors(id)
+            CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES Doctors(id)  ON DELETE CASCADE
           );
         `;
 
@@ -120,27 +126,27 @@ export async function setup_database() {
     const StoreHistory = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS StoreHistory (
             id SERIAL PRIMARY KEY,
-            medicineId INT NOT NULL,
-            userId INT NOT NULL,
+            medicine_id INT NOT NULL,
+            user_id INT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
-            CONSTRAINT fk_medicine FOREIGN KEY (medicineId) REFERENCES Medicine(id),
-            CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES Users(id)
+            CONSTRAINT fk_medicine FOREIGN KEY (medicine_id) REFERENCES Medicine(id),
+            CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(id)
           );
         `;
 
     const Feedback = prisma.$queryRaw`
           CREATE TABLE IF NOT EXISTS Feedback (
             id SERIAL PRIMARY KEY,
-            userId INT NOT NULL,
-            doctorId INT NOT NULL,
-            medicineId INT,
+            user_id INT NOT NULL,
+            doctor_id INT NOT NULL,
+            medicine_id INT,
             feedback TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP,
-            CONSTRAINT fk_user FOREIGN KEY (userId) REFERENCES Users(id),
-            CONSTRAINT fk_doctor FOREIGN KEY (doctorId) REFERENCES Doctors(id),
-            CONSTRAINT fk_medicine FOREIGN KEY (medicineId) REFERENCES Medicine(id)
+            CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+            CONSTRAINT fk_doctor FOREIGN KEY (doctor_id) REFERENCES Doctors(id) ON DELETE CASCADE,
+            CONSTRAINT fk_medicine FOREIGN KEY (medicine_id) REFERENCES Medicine(id) ON DELETE CASCADE
           );
         `;
 

@@ -21,9 +21,9 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-4">Follow Us</h4>
           <div className="flex space-x-4">
-            <a href="#"><img src="/images/facebook.png" alt="Facebook" className="h-6" /></a>
-            <a href="#"><img src="/images/instagram.png" alt="Instagram" className="h-6" /></a>
-            <a href="#"><img src="/images/linkedin.png" alt="LinkedIn" className="h-6" /></a>
+            {/* <a href="#"><img src="/images/facebook.png" alt="Facebook" className="h-6" /></a> */}
+            {/* <a href="#"><img src="/images/instagram.png" alt="Instagram" className="h-6" /></a> */}
+            {/* <a href="#"><img src="/images/linkedin.png" alt="LinkedIn" className="h-6" /></a> */}
           </div>
         </div>
       </div>

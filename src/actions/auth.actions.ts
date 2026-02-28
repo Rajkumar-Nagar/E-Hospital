@@ -27,7 +27,7 @@ export const createUser = async (data: User) => {
 
         const userExists: User[] = await prisma.$queryRaw`
         SELECT * FROM users
-        WHERE phoneNumber = ${phoneNumber}
+        WHERE phone_number = ${phoneNumber}
         `;
 
         if (userExists[0]) {
@@ -35,7 +35,7 @@ export const createUser = async (data: User) => {
         }
 
         const [user]: User[] = await prisma.$queryRaw`
-        INSERT INTO users ( name, email, password, dob, phoneNumber, gender, address)
+        INSERT INTO users ( name, email, password, dob, phone_number, gender, address)
         VALUES ( ${name}, ${email}, ${hashedPassword}, ${new Date()}, ${phoneNumber}, ${gender}, ${address})
         RETURNING * 
         `;
@@ -69,7 +69,7 @@ export const loginUser = async (data: {
 
     const user: User[] = await prisma.$queryRaw`
     SELECT * FROM users
-    WHERE phoneNumber = ${phoneNumber}
+    WHERE phone_number = ${phoneNumber}
     `;
 
     if (!user[0]) {

@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { setup_database } from "@/lib/setup_database";
 import { auth } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,15 +27,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // console.log(await auth())
+  const session = await auth();
   await setup_database();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <SessionProvider session={session}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </SessionProvider>
     </html>
   );
 }

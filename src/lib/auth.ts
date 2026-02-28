@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcrypt"
+import { users } from "@prisma/client";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
@@ -18,9 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     throw new Error('Phone number and password are required');
                 }
 
-                const user = await prisma.users.findUnique({
-                    where: { phoneNumber },
-                });
+                const [user]: users[] = await prisma.$queryRaw`
+                SELECT * FROM users
+                WHERE phone_number = ${phoneNumber}
+                `;
 
                 if (!user) {
                     throw new Error("User not found.");

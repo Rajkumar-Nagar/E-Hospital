@@ -4,9 +4,8 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// Zod Schema Definition
 const qualificationSchema = z.object({
-    degree: z.string().optional(), // Optional for 10th and 12th, required for college and others
+    degree: z.string().optional(),
     board: z.string().min(1, 'Board/University name is required'),
     passing_year: z.number().min(1900).max(new Date().getFullYear(), 'Invalid year'),
     percentage: z.number().min(0).max(100, 'Percentage must be between 0 and 100'),
@@ -20,16 +19,16 @@ const schema = z.object({
     position: z.string().min(1, 'Position is required'),
     status: z.enum(['Pending', 'Accepted', 'Rejected']),
     qualifications: z.record(qualificationSchema),
-    additionalQualifications: z.array(qualificationSchema), // For additional qualifications
+    additionalQualifications: z.array(qualificationSchema),
     experience: z.array(
         z.object({
             jobTitle: z.string().min(1, 'Job title is required'),
             startDate: z.string(),
             endDate: z.string(),
             hospital: z.string().min(1, 'Hospital name is required'),
-            //   offerLetter: z.string().url().optional(),
-            //   experienceLetter: z.string().url().optional(),
-            //   other: z.string().optional(),
+            offerLetter: z.string().optional(),
+            experienceLetter: z.string().optional(),
+            other: z.string().optional(),
         })
     ),
 });
@@ -39,7 +38,7 @@ export default function DoctorApplicationPage() {
     const { register, handleSubmit, formState: { errors }, control, setValue } = useForm<IFormData>({
         resolver: zodResolver(schema),
         defaultValues: {
-            userId: '2',
+            userId: '1',
             jobTitle: 'df',
             position: 'sdf',
             status: 'Pending',
@@ -65,7 +64,7 @@ export default function DoctorApplicationPage() {
 
     const onSubmit = async (data: IFormData) => {
         console.log(JSON.stringify(data, null, 2))
-        
+
         try {
             const response = await fetch('/api/apply', {
                 method: 'POST',
@@ -87,7 +86,7 @@ export default function DoctorApplicationPage() {
         const file = event.target.files?.[0];
         if (file) {
             const fileURL = URL.createObjectURL(file);
-            setValue(path, fileURL);
+            setValue(path as any, fileURL);
         }
     };
     console.log(errors)
