@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authActions } from '@/actions';
-import { signIn } from '@/lib/auth';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 

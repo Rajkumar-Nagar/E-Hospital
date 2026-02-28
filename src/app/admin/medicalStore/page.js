@@ -95,7 +95,7 @@ export default function MedicalStorePage() {
                         <p><strong>Expiry Date:</strong> {medicine.expiryDate}</p>
                         <p><strong>Listed Date:</strong> {medicine.listedDate}</p>
                         <div className="mt-4">
-                            <Link href={`/medicine/edit/${medicine.id}`} className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</Link>
+                            <Link href={`/admin/medicalStore/${medicine.id}`} className="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</Link>
                             <button
                                 onClick={() => handleDelete(medicine.id)}
                                 className="bg-red-500 text-white px-3 py-1 rounded"

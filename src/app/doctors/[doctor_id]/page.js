@@ -1,7 +1,7 @@
 
 "use client"
 import React, { useEffect, useState } from 'react';
-import { doctorsData } from '../page';
+import { doctorsData } from '../doctorsData';
 
 // Assuming doctorsData is coming from an API or a local source
 

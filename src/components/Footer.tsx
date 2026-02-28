@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-12">
@@ -13,9 +15,9 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold mb-4">Quick Links</h4>
           <ul>
-            <li><a href="/doctors" className="hover:text-blue-400">Doctors</a></li>
-            <li><a href="/services" className="hover:text-blue-400">Services</a></li>
-            <li><a href="/about" className="hover:text-blue-400">About Us</a></li>
+            <li><Link href="/doctors" className="hover:text-blue-400">Doctors</Link></li>
+            <li><Link href="/services" className="hover:text-blue-400">Services</Link></li>
+            <li><Link href="/about" className="hover:text-blue-400">About Us</Link></li>
           </ul>
         </div>
         <div>
@@ -28,7 +30,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="text-center mt-10 text-sm">
-        &copy; 2023 Kalyaan Hospital. All rights reserved.
+        &copy; {new Date().getFullYear()} Kalyaan Hospital. All rights reserved.
       </div>
     </footer>
   );

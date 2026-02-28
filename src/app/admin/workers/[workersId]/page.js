@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 
 // Example workers data
 const workersData = [
@@ -11,10 +11,9 @@ const workersData = [
 ];
 
 export default function WorkerDetails() {
-    const router = useRouter();
-    const { workersId } = router.query;
-    console.log(workersId)
-    const worker = workersData.find((w) => w.id === workersId);
+    const params = useParams();
+    const workersId = params.workersId;
+    const worker = workersData.find((w) => w.id === Number(workersId));
 
     if (!worker) {
         return <p>Worker not found</p>;

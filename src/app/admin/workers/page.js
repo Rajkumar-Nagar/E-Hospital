@@ -86,7 +86,7 @@ export default function WorkersPage() {
                                     <td className="p-3 border">{worker.id}</td>
                                     <td className="p-3 border">
                                       
-                                            <Link href={`/workers/${worker.id}`} className="text-blue-500 hover:underline">{worker.name}</Link>
+                                            <Link href={`/admin/workers/${worker.id}`} className="text-blue-500 hover:underline">{worker.name}</Link>
                                         
                                     </td>
                                     <td className="p-3 border">{worker.department}</td>

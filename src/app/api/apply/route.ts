@@ -9,7 +9,7 @@ export const POST = async (request: Request) => {
   try {
     await prisma.users.upsert({
       where: { id: 1 }, update: {},
-      create: { name: 'asdf', email: '', id: 1, phone_number: '1234567890', address: '123', gender: 'Male', dob: '2024-10-23T00:00:00.000Z', image: null, created_at: '2024-10-23T19:47:27.216Z', password: "$2b$10$hibRIIWeiTxMnbKctRSHfu9lqKBeXn4b3D.zphamuOS6S.HYcIW6O", },
+      create: { name: 'asdf', email: '', id: 1, phone_number: '1234567890', address: '123', gender: 'Male', dob: new Date('2024-10-23T00:00:00.000Z'), image: null, created_at: new Date('2024-10-23T19:47:27.216Z'), password: "$2b$10$hibRIIWeiTxMnbKctRSHfu9lqKBeXn4b3D.zphamuOS6S.HYcIW6O", },
     })
 
     // Insert doctor information into the Doctors table
